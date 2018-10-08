@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "467251110482",
+    "firebase_url": "https://auadrop.firebaseio.com",
+    "project_id": "auadrop",
+    "storage_bucket": "auadrop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467251110482:android:797f2d1cf931f646",
+        "android_client_info": {
+          "package_name": "com.zhunussov.auadrop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467251110482-pp95i03ln5m6c5ms7ppgha4tvr35b9vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUw6dZ_NxJ9s7RUBPDn19B8fUVynwafEA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

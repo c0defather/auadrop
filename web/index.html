@@ -1,0 +1,75 @@
+<script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+<script type="text/javascript" src="./jquery.min.js"></script>
+<script type="text/javascript" src="./qrcode.min.js"></script>  
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDRuplvg9SOapoK213DBiAQvWghtKp2Pew",
+    authDomain: "auadrop.firebaseapp.com",
+    databaseURL: "https://auadrop.firebaseio.com",
+    projectId: "auadrop",
+    storageBucket: "auadrop.appspot.com",
+    messagingSenderId: "467251110482"
+  };
+  firebase.initializeApp(config);
+  var storage = firebase.storage();
+  var storageRef = storage.ref('test/')
+  firebase.auth().signInAnonymously();
+  firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        var id = makeid();
+        var qrcode = new QRCode(document.getElementById("qrcode"), id);
+        window.setInterval(function(){
+          var pathReference = storage.ref('test/' + id);  
+          pathReference.getDownloadURL().then(function(url) {
+            var link = document.getElementById("link");
+            link.innerHTML = "Download";
+            link.href = url; 
+          });
+        }, 100000);
+
+        document.querySelector('.file-select').addEventListener('change', handleFileUploadChange);
+        document.querySelector('.file-submit').addEventListener('click', handleFileUploadSubmit);
+       
+        var selectedFile;
+
+        function handleFileUploadChange(e) {
+          selectedFile = e.target.files[0];
+        }
+        function handleFileUploadSubmit(e) {
+          const uploadTask = storageRef.child(id).put(selectedFile); //create a child directory called images, and place the file inside this directory
+          uploadTask.on('state_changed', (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            document.getElementById("progress").innerHTML = progress;
+          }, (error) => {
+            // Handle unsuccessful uploads
+            console.log(error);
+          }, () => {
+            // Do something once upload is complete
+            console.log('success');
+          });
+        }
+      } else {
+        alert("Auth failed");
+      }
+    }
+  );
+
+  function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 50; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+</script>
+<div id="qrcode"></div>
+<a id="link" href=""></a>
+<div id="filesubmit">
+  <input type="file" class="file-select" accept="image/*"/>
+  <button class="file-submit">SUBMIT</button>
+</div>
+<p id="progress"></p>
