@@ -100,7 +100,7 @@ public class MainPresenter extends MvpPresenter<MainContract.View> implements Ma
                     @Override
                     public void onComplete() {
                         getViewState().hideProgress();
-                        router.navigateTo("sdf");
+                        router.exit();
                     }
                 });
     }
