@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -21,6 +25,7 @@ import com.zhunussov.auadrop.R;
 import com.zhunussov.auadrop.model.Mode;
 import com.zhunussov.auadrop.view.AuaProgressView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -70,15 +75,19 @@ public class MainView extends MvpAppCompatActivity implements MainContract.View 
 
         handleActionIfAvailable();
 
-        navigatorHolder.setNavigator(new Navigator() {
-            @Override
-            public void applyCommands(Command[] commands) {
-                if (commands[0] instanceof Back) {
+        navigatorHolder.setNavigator(commands -> {
+            if (commands[0] instanceof Back) {
+                showProgress(100);
+                new Handler().postDelayed(() -> finish(), 500);
+            } else if (commands[0] instanceof Forward) {
+                showProgress(100);
+                new Handler().postDelayed(() -> {
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
+                    File zipFile = new File(Environment.getExternalStorageDirectory(), ((Forward)commands[0]).getScreenKey());
+                    Toast.makeText(MainView.this, "File saved: " + zipFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
                     finish();
-                } else if (commands[0] instanceof Forward) {
-                    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
-                    finish();
-                }
+                }, 500);
             }
         });
     }
@@ -103,8 +112,6 @@ public class MainView extends MvpAppCompatActivity implements MainContract.View 
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupCodeScanner();
-            } else {
-                // Permission denied.
             }
         }
     }
@@ -118,11 +125,6 @@ public class MainView extends MvpAppCompatActivity implements MainContract.View 
 
     @Override
     public void showAs(Mode mode) {
-        if (mode == Mode.UPLOAD) {
-
-        } else {
-
-        }
     }
 
     @Override
@@ -153,9 +155,7 @@ public class MainView extends MvpAppCompatActivity implements MainContract.View 
         codeScanner.setAutoFocusEnabled(true);
 
         // Callbacks
-        codeScanner.setDecodeCallback(result -> {
-            presenter.onQRCodeScanned(result.getText());
-        });
+        codeScanner.setDecodeCallback(result -> presenter.onQRCodeScanned(result.getText()));
     }
 
     private void handleActionIfAvailable() {
@@ -173,20 +173,6 @@ public class MainView extends MvpAppCompatActivity implements MainContract.View 
             if (type.startsWith("image/")) {
 //                handleSendMultipleImages(intent); // Handle multiple images being sent
             }
-        }
-    }
-
-    void handleSendText(Intent intent) {
-        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (sharedText != null) {
-            // Update UI to reflect text being shared
-        }
-    }
-
-    void handleSendMultipleImages(Intent intent) {
-        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (imageUris != null) {
-            // Update UI to reflect multiple images being shared
         }
     }
 }

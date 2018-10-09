@@ -42,7 +42,6 @@ public class MainPresenter extends MvpPresenter<MainContract.View> implements Ma
     MainPresenter() {
         App.appComponent().inject(this);
     }
-
     @Override
     public void onFirstViewAttach() {
         userRepo.signInAnonymously();
@@ -72,8 +71,7 @@ public class MainPresenter extends MvpPresenter<MainContract.View> implements Ma
 
                         @Override
                         public void onComplete() {
-                            getViewState().hideProgress();
-                            router.navigateTo("sdf");
+                            router.navigateTo(text + ".zip");
                         }
                     });
             return;
@@ -99,14 +97,14 @@ public class MainPresenter extends MvpPresenter<MainContract.View> implements Ma
 
                     @Override
                     public void onComplete() {
-                        getViewState().hideProgress();
+
                         router.exit();
                     }
                 });
     }
 
     @Override
-    public void onFilesAvailableToUpload(@Nullable List<Uri> uris) {
+    public void onFilesAvailableToUpload(@NonNull List<Uri> uris) {
         filesUris = new ArrayList<>(uris);
     }
 

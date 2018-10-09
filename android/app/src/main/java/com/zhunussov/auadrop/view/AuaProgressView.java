@@ -17,8 +17,8 @@ import android.view.animation.DecelerateInterpolator;
  */
 public class AuaProgressView extends View {
 
-    private static final int DEFAULT_BG_COLOR = Color.parseColor("#FAFAFA");
-    private static final int DEFAULT_FILL_COLOR = Color.parseColor("#FF6D00");
+    private static final int DEFAULT_BG_COLOR = Color.parseColor("#D1C4E9");
+    private static final int DEFAULT_FILL_COLOR = Color.parseColor("#6200EA");
     private static final int DEFAULT_STROKE_WIDTH = 20;
 
     private float progress = 0;
@@ -75,22 +75,26 @@ public class AuaProgressView extends View {
         }
         if (progress > 40) {
             canvas.drawArc(rects[0], 180, 180, false, fillPaint);
+            canvas.drawLine(strokeWidth, h/2, w / 3, h/2, fillPaint);
         }
         if (progress > 60) {
             canvas.drawArc(rects[1], 180, -180, false, fillPaint);
         }
         if (progress > 80) {
             canvas.drawArc(rects[2], 180, 180, false, fillPaint);
+            canvas.drawLine(w * 2 / 3, h/2, w - strokeWidth, h/2, fillPaint);
         }
 
         if (progress >= 0 && progress <= 20) {
             canvas.drawLine(strokeWidth / 2, h / 2 + ((20 - progress) * h / 40) - strokeWidth / 2, strokeWidth / 2, h - strokeWidth / 2, fillPaint);
         } else if (progress <= 40) {
             canvas.drawArc(rects[0], 180, 180 * (progress - 20) / 20, false, fillPaint);
+            canvas.drawLine(0, h/2, w / 3 * (progress - 20) / 20, h/2, fillPaint);
         } else if (progress <= 60) {
             canvas.drawArc(rects[1], 180, -180 * (progress - 40) / 20, false, fillPaint);
         } else if (progress <= 80) {
             canvas.drawArc(rects[2], 180, 180 * (progress - 60) / 20, false, fillPaint);
+            canvas.drawLine(w * 2 / 3, h/2, w * 2 / 3 + (w / 3 - strokeWidth) * (progress - 60) / 20, h/2, fillPaint);
         } else {
             canvas.drawLine(w - strokeWidth / 2, h / 2, w - strokeWidth / 2, h / 2 + ((progress - 80) * h / 40) - strokeWidth / 2, fillPaint);
         }

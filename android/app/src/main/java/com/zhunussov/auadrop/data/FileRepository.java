@@ -52,7 +52,7 @@ public class FileRepository {
 
         StorageReference fileRef = reference.child("test/" + filename);
 
-        File localFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+        File localFile = new File(Environment.getExternalStorageDirectory(), filename + ".zip");
 
         fileRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> subject.onComplete())

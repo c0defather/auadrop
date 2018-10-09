@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        android:background="@color/orange_light_opaque">
+        android:background="#EEFFFFFF">
         <com.zhunussov.auadrop.view.AuaProgressView
             android:id="@+id/progress"
             android:layout_width="300dp"
